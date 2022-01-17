@@ -18,6 +18,7 @@ public class Solution {
             if (closingForOpening.containsKey(newChar)) {
                 stack.push(newChar);
             } else {
+                if (stack.isEmpty()) return false;
                 char closingForNewChar = stack.pop();
                 var expectedClosing = closingForOpening.get(closingForNewChar);
                 if (newChar != expectedClosing) {

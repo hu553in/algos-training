@@ -10,6 +10,7 @@ class SolutionTest {
     void validateParentheses() {
         Assertions.assertTrue(solution.validateParentheses("({({})})"));
         Assertions.assertFalse(solution.validateParentheses("({)}"));
+        Assertions.assertFalse(solution.validateParentheses("}"));
     }
 
     @Test
