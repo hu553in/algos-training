@@ -1,5 +1,4 @@
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -95,9 +94,7 @@ class SolutionsTest {
         Assertions.assertEquals(expected, actual);
     }
 
-    // TODO: enable when method is implemented
     @Test
-    @Disabled
     void convertBinarySearchTreeToListWithRecursion() {
         var root = new BinarySearchTreeNode<>(10);
         var leftChild = new BinarySearchTreeNode<>(5);
@@ -112,9 +109,7 @@ class SolutionsTest {
         Assertions.assertEquals(expected, actual);
     }
 
-    // TODO: enable when method is implemented
     @Test
-    @Disabled
     void convertBinarySearchTreeToListWithRecursion_singleElement() {
         var root = new BinarySearchTreeNode<>(10);
         var actual = solutions.convertBinarySearchTreeToListWithRecursion(root);
