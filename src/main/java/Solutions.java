@@ -123,13 +123,9 @@ public class Solutions {
 
     /**
      * Column addition of two numbers stored in linked lists with first elements as minor ones, e.g.:
-     * <p>
      * 876 + 7654 = 8530
-     * <p>
-     * [ 6, 7, 8 ]
-     * +
-     * [ 4, 5, 6, 7 ]
-     * =
+     * [ 6, 7, 8 ]    +
+     * [ 4, 5, 6, 7 ] =
      * [ 0, 3, 5, 8 ]
      */
     public LinkedList<Integer> sumTwoNumbers(
@@ -170,16 +166,15 @@ public class Solutions {
 
     /**
      * There is queue for tickets.
-     * Each person needs certain number of tickets.
+     * Each person requires certain number of tickets.
      * Single person can buy only one ticket at single time.
-     * If more is needed, then person goes to end of queue with number of needed tickets reduced by 1.
-     * If person has bought all needed tickets, then they leave queue and queue is shortened.
+     * If more is required, then person goes to end of queue with number of required tickets reduced by 1.
+     * If person has bought all required tickets, then they leave queue and queue is shortened.
      * New people do not appear in queue.
+     * Task is to calculate number of iterations of ticket purchases for target person to buy all tickets they require.
      *
-     * @param requiredTicketCounts numbers of tickets that each person needs
+     * @param requiredTicketCounts numbers of tickets that each person requires
      * @param targetIndex          index of target person in queue
-     *                             <p>
-     *                             Task is to calculate number of iterations of ticket purchases for target person to buy all tickets they need.
      */
     public int tickets(final int[] requiredTicketCounts, final int targetIndex) {
         var queueLength = requiredTicketCounts.length - 1;
@@ -207,19 +202,7 @@ public class Solutions {
     }
 
     /**
-     * Convert binary search tree to list, e.g.:
-     * <p>
-     * ___ 5 ___
-     * /         \
-     * _ 3 _      _ 7 _
-     * /     \    /     \
-     * 2      4   6      8
-     * <p>
-     * |
-     * |
-     * v
-     * <p>
-     * [ 2, 3, 4, 5, 6, 7, 8 ]
+     * Convert binary search tree to list
      */
     public <T> List<T> convertBinarySearchTreeToList(final BinarySearchTreeNode<T> rootNode) {
         var result = new LinkedList<T>();
@@ -248,19 +231,7 @@ public class Solutions {
 
 
     /**
-     * Convert binary search tree to list with recursion, e.g.:
-     * <p>
-     * ___ 5 ___
-     * /         \
-     * _ 3 _      _ 7 _
-     * /     \    /     \
-     * 2      4   6      8
-     * <p>
-     * |
-     * |
-     * v
-     * <p>
-     * [ 2, 3, 4, 5, 6, 7, 8 ]
+     * Convert binary search tree to list with recursion
      */
     public <T> List<T> convertBinarySearchTreeToListWithRecursion(final BinarySearchTreeNode<T> rootNode) {
         var result = new LinkedList<T>();
