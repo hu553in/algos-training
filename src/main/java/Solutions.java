@@ -1,13 +1,15 @@
+import binary_tree.BinaryTreeNode;
+import queue.consumer.EndlessSortedConsumer;
+import queue.producer.EndlessSortedProducer;
+
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Solutions {
-    private final ExecutorService executor = Executors.newCachedThreadPool();
-
     /**
      * Validate different types of brackets — (), [], {} — via stack
      */
@@ -44,81 +46,91 @@ public class Solutions {
             final int pieceLength
     ) throws InterruptedException {
         var pieceCount = (int) Math.ceil((double) s.length() / pieceLength);
-        var deviations = new long[pieceCount];
-        var total = new AtomicLong();
-        var countDownLatch = new CountDownLatch(pieceCount);
-        for (var i = 0; i < pieceCount; i++) {
-            final var finalIndex = i;
-            executor.submit(() -> {
-                var pieceEndExclusiveIndex = pieceLength * (finalIndex + 1);
-                if (pieceEndExclusiveIndex > s.length()) {
-                    pieceEndExclusiveIndex = s.length();
-                }
-                var piece = s.substring(pieceLength * finalIndex, pieceEndExclusiveIndex).toCharArray();
-                var maxDeviation = 0L;
-                var localTotal = 0L;
-                for (var character : piece) {
-                    if (character == '(') {
-                        localTotal++;
-                    } else if (character == ')') {
-                        localTotal--;
+        var executor = Executors.newFixedThreadPool(pieceCount);
+        try {
+            var total = new AtomicLong();
+            var deviations = new long[pieceCount];
+            var countDownLatch = new CountDownLatch(pieceCount);
+            for (var i = 0; i < pieceCount; i++) {
+                final var finalIndex = i;
+                executor.submit(() -> {
+                    var pieceEndExclusiveIndex = pieceLength * (finalIndex + 1);
+                    if (pieceEndExclusiveIndex > s.length()) {
+                        pieceEndExclusiveIndex = s.length();
                     }
-                    if (Math.abs(localTotal) > Math.abs(maxDeviation)) {
-                        maxDeviation = localTotal;
+                    var piece = s.substring(pieceLength * finalIndex, pieceEndExclusiveIndex).toCharArray();
+                    var maxDeviation = 0L;
+                    var localTotal = 0L;
+                    for (var character : piece) {
+                        if (character == '(') {
+                            localTotal++;
+                        } else if (character == ')') {
+                            localTotal--;
+                        }
+                        if (Math.abs(localTotal) > Math.abs(maxDeviation)) {
+                            maxDeviation = localTotal;
+                        }
                     }
-                }
-                deviations[finalIndex] = maxDeviation;
-                total.addAndGet(localTotal);
-                countDownLatch.countDown();
-            });
-        }
-        countDownLatch.await();
-        var currentDeviation = 0;
-        for (var newDeviation : deviations) {
-            currentDeviation += newDeviation;
-            if (currentDeviation < 0) {
-                return false;
+                    deviations[finalIndex] = maxDeviation;
+                    total.addAndGet(localTotal);
+                    countDownLatch.countDown();
+                });
             }
+            countDownLatch.await();
+            var currentDeviation = 0;
+            for (var newDeviation : deviations) {
+                currentDeviation += newDeviation;
+                if (currentDeviation < 0) {
+                    return false;
+                }
+            }
+            return total.get() == 0;
+        } finally {
+            executor.shutdown();
         }
-        return total.get() == 0;
     }
 
     /**
      * Concurrent merge sort
      */
     public <T extends Comparable<T>> T[] concurrentMergeSort(final T[] array) throws Exception {
-        return executor.submit(() -> {
-            var length = array.length;
-            if (length > 1) {
-                var middle = length / 2;
-                var left = concurrentMergeSort(Arrays.copyOfRange(array, 0, middle));
-                var right = concurrentMergeSort(Arrays.copyOfRange(array, middle, length));
-                var leftIndex = 0;
-                var rightIndex = 0;
-                var arrayIndex = 0;
-                while (leftIndex < left.length && rightIndex < right.length) {
-                    if (left[leftIndex].compareTo(right[rightIndex]) < 0) {
+        var executor = Executors.newCachedThreadPool();
+        try {
+            return executor.submit(() -> {
+                var length = array.length;
+                if (length > 1) {
+                    var middle = length / 2;
+                    var left = concurrentMergeSort(Arrays.copyOfRange(array, 0, middle));
+                    var right = concurrentMergeSort(Arrays.copyOfRange(array, middle, length));
+                    var leftIndex = 0;
+                    var rightIndex = 0;
+                    var arrayIndex = 0;
+                    while (leftIndex < left.length && rightIndex < right.length) {
+                        if (left[leftIndex].compareTo(right[rightIndex]) < 0) {
+                            array[arrayIndex] = left[leftIndex];
+                            leftIndex++;
+                        } else if (left[leftIndex].compareTo(right[rightIndex]) > 0) {
+                            array[arrayIndex] = right[rightIndex];
+                            rightIndex++;
+                        }
+                        arrayIndex++;
+                    }
+                    while (leftIndex < left.length) {
                         array[arrayIndex] = left[leftIndex];
                         leftIndex++;
-                    } else if (left[leftIndex].compareTo(right[rightIndex]) > 0) {
+                        arrayIndex++;
+                    }
+                    while (rightIndex < right.length) {
                         array[arrayIndex] = right[rightIndex];
                         rightIndex++;
+                        arrayIndex++;
                     }
-                    arrayIndex++;
                 }
-                while (leftIndex < left.length) {
-                    array[arrayIndex] = left[leftIndex];
-                    leftIndex++;
-                    arrayIndex++;
-                }
-                while (rightIndex < right.length) {
-                    array[arrayIndex] = right[rightIndex];
-                    rightIndex++;
-                    arrayIndex++;
-                }
-            }
-            return array;
-        }).get();
+                return array;
+            }).get();
+        } finally {
+            executor.shutdown();
+        }
     }
 
     /**
@@ -259,5 +271,22 @@ public class Solutions {
             }
         }
         return result;
+    }
+
+
+    /**
+     * Merge list of endless sorted producer queues into single endless sorted consumer queue
+     */
+    public <T> void mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue(
+            final List<? extends EndlessSortedProducer<T>> producers,
+            final EndlessSortedConsumer<T> consumer
+    ) {
+        var executor = Executors.newScheduledThreadPool(producers.size());
+        producers.forEach(producer -> executor.scheduleAtFixedRate(
+                () -> consumer.offer(producer.poll()),
+                0,
+                100,
+                TimeUnit.MILLISECONDS
+        ));
     }
 }

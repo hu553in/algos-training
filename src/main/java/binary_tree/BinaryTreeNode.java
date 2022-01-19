@@ -1,8 +1,10 @@
+package binary_tree;
+
 public class BinaryTreeNode<T> {
+    private final T value;
     private BinaryTreeNode<T> parent;
     private BinaryTreeNode<T> leftChild;
     private BinaryTreeNode<T> rightChild;
-    private final T value;
 
     public BinaryTreeNode(T value) {
         this.value = value;

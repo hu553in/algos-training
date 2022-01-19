@@ -1,5 +1,8 @@
+import binary_tree.BinaryTreeNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import queue.consumer.EndlessSortedConsumerImpl;
+import queue.producer.EndlessSortedProducerImpl;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -144,5 +147,30 @@ class SolutionsTest {
         root.setLeftChild(leftChild);
         root.setRightChild(rightChild);
         Assertions.assertFalse(solutions.isBinaryTreeSearch(root));
+    }
+
+    @Test
+    void mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue() throws InterruptedException {
+        var producers = List.of(
+                new EndlessSortedProducerImpl(),
+                new EndlessSortedProducerImpl()
+        );
+        var actualConsumer = new EndlessSortedConsumerImpl<Long>();
+        solutions.mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue(
+                producers,
+                actualConsumer
+        );
+        Thread.sleep(5000);
+        var expectedConsumer = new EndlessSortedConsumerImpl<Long>();
+        expectedConsumer.offer(0L);
+        expectedConsumer.offer(0L);
+        expectedConsumer.offer(1L);
+        expectedConsumer.offer(1L);
+        expectedConsumer.offer(2L);
+        expectedConsumer.offer(2L);
+        Assertions.assertEquals(
+                expectedConsumer.toList(),
+                actualConsumer.toList().subList(0, 6)
+        );
     }
 }
