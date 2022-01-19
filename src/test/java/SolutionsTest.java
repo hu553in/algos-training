@@ -73,14 +73,14 @@ class SolutionsTest {
 
     @Test
     void convertBinarySearchTreeToList() {
-        var root = new BinarySearchTreeNode<>(10);
-        var leftChild = new BinarySearchTreeNode<>(5);
-        var rightChild = new BinarySearchTreeNode<>(15);
+        var root = new BinaryTreeNode<>(10);
+        var leftChild = new BinaryTreeNode<>(5);
+        var rightChild = new BinaryTreeNode<>(15);
         root.setLeftChild(leftChild);
         root.setRightChild(rightChild);
-        leftChild.setLeftChild(new BinarySearchTreeNode<>(3));
-        leftChild.setRightChild(new BinarySearchTreeNode<>(7));
-        rightChild.setLeftChild(new BinarySearchTreeNode<>(13));
+        leftChild.setLeftChild(new BinaryTreeNode<>(3));
+        leftChild.setRightChild(new BinaryTreeNode<>(7));
+        rightChild.setLeftChild(new BinaryTreeNode<>(13));
         var actual = solutions.convertBinarySearchTreeToList(root);
         var expected = List.of(3, 5, 7, 10, 13, 15);
         Assertions.assertEquals(expected, actual);
@@ -88,7 +88,7 @@ class SolutionsTest {
 
     @Test
     void convertBinarySearchTreeToList_singleElement() {
-        var root = new BinarySearchTreeNode<>(10);
+        var root = new BinaryTreeNode<>(10);
         var actual = solutions.convertBinarySearchTreeToList(root);
         var expected = List.of(10);
         Assertions.assertEquals(expected, actual);
@@ -96,14 +96,14 @@ class SolutionsTest {
 
     @Test
     void convertBinarySearchTreeToListWithRecursion() {
-        var root = new BinarySearchTreeNode<>(10);
-        var leftChild = new BinarySearchTreeNode<>(5);
-        var rightChild = new BinarySearchTreeNode<>(15);
+        var root = new BinaryTreeNode<>(10);
+        var leftChild = new BinaryTreeNode<>(5);
+        var rightChild = new BinaryTreeNode<>(15);
         root.setLeftChild(leftChild);
         root.setRightChild(rightChild);
-        leftChild.setLeftChild(new BinarySearchTreeNode<>(3));
-        leftChild.setRightChild(new BinarySearchTreeNode<>(7));
-        rightChild.setLeftChild(new BinarySearchTreeNode<>(13));
+        leftChild.setLeftChild(new BinaryTreeNode<>(3));
+        leftChild.setRightChild(new BinaryTreeNode<>(7));
+        rightChild.setLeftChild(new BinaryTreeNode<>(13));
         var actual = solutions.convertBinarySearchTreeToListWithRecursion(root);
         var expected = List.of(3, 5, 7, 10, 13, 15);
         Assertions.assertEquals(expected, actual);
@@ -111,9 +111,38 @@ class SolutionsTest {
 
     @Test
     void convertBinarySearchTreeToListWithRecursion_singleElement() {
-        var root = new BinarySearchTreeNode<>(10);
+        var root = new BinaryTreeNode<>(10);
         var actual = solutions.convertBinarySearchTreeToListWithRecursion(root);
         var expected = List.of(10);
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void isBinaryTreeSearch_true() {
+        var root = new BinaryTreeNode<>(10);
+        var leftChild = new BinaryTreeNode<>(5);
+        var rightChild = new BinaryTreeNode<>(15);
+        root.setLeftChild(leftChild);
+        root.setRightChild(rightChild);
+        leftChild.setLeftChild(new BinaryTreeNode<>(3));
+        leftChild.setRightChild(new BinaryTreeNode<>(7));
+        rightChild.setLeftChild(new BinaryTreeNode<>(13));
+        Assertions.assertTrue(solutions.isBinaryTreeSearch(root));
+    }
+
+    @Test
+    void isBinaryTreeSearch_singleElementTrue() {
+        var root = new BinaryTreeNode<>(10);
+        Assertions.assertTrue(solutions.isBinaryTreeSearch(root));
+    }
+
+    @Test
+    void isBinaryTreeSearch_false() {
+        var root = new BinaryTreeNode<>(10);
+        var leftChild = new BinaryTreeNode<>(12);
+        var rightChild = new BinaryTreeNode<>(15);
+        root.setLeftChild(leftChild);
+        root.setRightChild(rightChild);
+        Assertions.assertFalse(solutions.isBinaryTreeSearch(root));
     }
 }

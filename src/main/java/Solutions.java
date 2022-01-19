@@ -204,7 +204,7 @@ public class Solutions {
     /**
      * Convert binary search tree to list
      */
-    public <T> List<T> convertBinarySearchTreeToList(final BinarySearchTreeNode<T> rootNode) {
+    public <T> List<T> convertBinarySearchTreeToList(final BinaryTreeNode<T> rootNode) {
         var result = new LinkedList<T>();
         var mutableRootNode = rootNode;
         var currentNode = mutableRootNode;
@@ -233,12 +233,30 @@ public class Solutions {
     /**
      * Convert binary search tree to list with recursion
      */
-    public <T> List<T> convertBinarySearchTreeToListWithRecursion(final BinarySearchTreeNode<T> rootNode) {
+    public <T> List<T> convertBinarySearchTreeToListWithRecursion(final BinaryTreeNode<T> rootNode) {
         var result = new LinkedList<T>();
         if (rootNode != null) {
             result.addAll(convertBinarySearchTreeToListWithRecursion(rootNode.getLeftChild()));
             result.add(rootNode.getValue());
             result.addAll(convertBinarySearchTreeToListWithRecursion(rootNode.getRightChild()));
+        }
+        return result;
+    }
+
+    /**
+     * Check whether binary tree is binary search tree
+     */
+    public <T extends Comparable<T>> boolean isBinaryTreeSearch(final BinaryTreeNode<T> rootNode) {
+        var result = true;
+        if (rootNode != null) {
+            if (rootNode.hasLeftChild()) {
+                result = rootNode.getValue().compareTo(rootNode.getLeftChild().getValue()) > 0;
+                result &= isBinaryTreeSearch(rootNode.getLeftChild());
+            }
+            if (rootNode.hasRightChild()) {
+                result &= rootNode.getValue().compareTo(rootNode.getRightChild().getValue()) < 0;
+                result &= isBinaryTreeSearch(rootNode.getRightChild());
+            }
         }
         return result;
     }

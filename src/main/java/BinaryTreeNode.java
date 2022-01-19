@@ -1,18 +1,18 @@
-public class BinarySearchTreeNode<T> {
-    private BinarySearchTreeNode<T> parent;
-    private BinarySearchTreeNode<T> leftChild;
-    private BinarySearchTreeNode<T> rightChild;
+public class BinaryTreeNode<T> {
+    private BinaryTreeNode<T> parent;
+    private BinaryTreeNode<T> leftChild;
+    private BinaryTreeNode<T> rightChild;
     private final T value;
 
-    public BinarySearchTreeNode(T value) {
+    public BinaryTreeNode(T value) {
         this.value = value;
     }
 
-    public BinarySearchTreeNode<T> getParent() {
+    public BinaryTreeNode<T> getParent() {
         return parent;
     }
 
-    private void setParent(BinarySearchTreeNode<T> parent) {
+    private void setParent(BinaryTreeNode<T> parent) {
         this.parent = parent;
     }
 
@@ -20,20 +20,20 @@ public class BinarySearchTreeNode<T> {
         parent = null;
     }
 
-    public BinarySearchTreeNode<T> getLeftChild() {
+    public BinaryTreeNode<T> getLeftChild() {
         return leftChild;
     }
 
-    public void setLeftChild(BinarySearchTreeNode<T> leftChild) {
+    public void setLeftChild(BinaryTreeNode<T> leftChild) {
         this.leftChild = leftChild;
         if (leftChild != null) leftChild.setParent(this);
     }
 
-    public BinarySearchTreeNode<T> getRightChild() {
+    public BinaryTreeNode<T> getRightChild() {
         return rightChild;
     }
 
-    public void setRightChild(BinarySearchTreeNode<T> rightChild) {
+    public void setRightChild(BinaryTreeNode<T> rightChild) {
         this.rightChild = rightChild;
         if (rightChild != null) rightChild.setParent(this);
     }
