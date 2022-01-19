@@ -5,12 +5,9 @@ import queue.producer.EndlessSortedProducer;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class Solutions {
     /**
@@ -295,5 +292,19 @@ public class Solutions {
                 TimeUnit.MILLISECONDS
         ));
         return executor::shutdown;
+    }
+
+    /**
+     * Mirror binary tree
+     */
+    public <T> BinaryTreeNode<T> mirrorBinaryTree(final BinaryTreeNode<T> rootNode) {
+        if (rootNode != null) {
+            var temp = rootNode.getLeftChild();
+            rootNode.setLeftChild(rootNode.getRightChild());
+            rootNode.setRightChild(temp);
+            mirrorBinaryTree(rootNode.getLeftChild());
+            mirrorBinaryTree(rootNode.getRightChild());
+        }
+        return rootNode;
     }
 }

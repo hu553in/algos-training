@@ -79,11 +79,14 @@ class SolutionsTest {
         var root = new BinaryTreeNode<>(10);
         var leftChild = new BinaryTreeNode<>(5);
         var rightChild = new BinaryTreeNode<>(15);
+
         root.setLeftChild(leftChild);
         root.setRightChild(rightChild);
+
         leftChild.setLeftChild(new BinaryTreeNode<>(3));
         leftChild.setRightChild(new BinaryTreeNode<>(7));
         rightChild.setLeftChild(new BinaryTreeNode<>(13));
+
         var actual = solutions.convertBinarySearchTreeToList(root);
         var expected = List.of(3, 5, 7, 10, 13, 15);
         Assertions.assertEquals(expected, actual);
@@ -102,11 +105,14 @@ class SolutionsTest {
         var root = new BinaryTreeNode<>(10);
         var leftChild = new BinaryTreeNode<>(5);
         var rightChild = new BinaryTreeNode<>(15);
+
         root.setLeftChild(leftChild);
         root.setRightChild(rightChild);
+
         leftChild.setLeftChild(new BinaryTreeNode<>(3));
         leftChild.setRightChild(new BinaryTreeNode<>(7));
         rightChild.setLeftChild(new BinaryTreeNode<>(13));
+
         var actual = solutions.convertBinarySearchTreeToListWithRecursion(root);
         var expected = List.of(3, 5, 7, 10, 13, 15);
         Assertions.assertEquals(expected, actual);
@@ -125,11 +131,14 @@ class SolutionsTest {
         var root = new BinaryTreeNode<>(10);
         var leftChild = new BinaryTreeNode<>(5);
         var rightChild = new BinaryTreeNode<>(15);
+
         root.setLeftChild(leftChild);
         root.setRightChild(rightChild);
+
         leftChild.setLeftChild(new BinaryTreeNode<>(3));
         leftChild.setRightChild(new BinaryTreeNode<>(7));
         rightChild.setLeftChild(new BinaryTreeNode<>(13));
+
         Assertions.assertTrue(solutions.isBinaryTreeSearch(root));
     }
 
@@ -172,5 +181,42 @@ class SolutionsTest {
                 expectedConsumer.toList(),
                 actualConsumerList
         );
+    }
+
+    @Test
+    void mirrorBinaryTree() {
+        var root = new BinaryTreeNode<>(10);
+        var leftChild = new BinaryTreeNode<>(5);
+        var rightChild = new BinaryTreeNode<>(15);
+
+        root.setLeftChild(leftChild);
+        root.setRightChild(rightChild);
+
+        leftChild.setLeftChild(new BinaryTreeNode<>(3));
+        leftChild.setRightChild(new BinaryTreeNode<>(7));
+        rightChild.setLeftChild(new BinaryTreeNode<>(13));
+
+        var mirroredRoot = solutions.mirrorBinaryTree(root);
+        var node5 = mirroredRoot.getRightChild();
+        var node15 = mirroredRoot.getLeftChild();
+        var node3 = node5.getRightChild();
+        var node7 = node5.getLeftChild();
+        var node13 = node15.getRightChild();
+
+        Assertions.assertEquals(10, mirroredRoot.getValue());
+        Assertions.assertEquals(5, node5.getValue());
+        Assertions.assertEquals(15, node15.getValue());
+        Assertions.assertEquals(3, node3.getValue());
+        Assertions.assertEquals(7, node7.getValue());
+        Assertions.assertEquals(13, node13.getValue());
+
+        Assertions.assertNull(mirroredRoot.getParent());
+        Assertions.assertNull(node3.getLeftChild());
+        Assertions.assertNull(node3.getRightChild());
+        Assertions.assertNull(node7.getLeftChild());
+        Assertions.assertNull(node7.getRightChild());
+        Assertions.assertNull(node15.getLeftChild());
+        Assertions.assertNull(node13.getLeftChild());
+        Assertions.assertNull(node13.getRightChild());
     }
 }
