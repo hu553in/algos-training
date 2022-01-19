@@ -5,9 +5,12 @@ import queue.producer.EndlessSortedProducer;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class Solutions {
     /**
@@ -277,16 +280,20 @@ public class Solutions {
     /**
      * Merge list of endless sorted producer queues into single endless sorted consumer queue
      */
-    public <T> void mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue(
+    public <T> Runnable mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue(
             final List<? extends EndlessSortedProducer<T>> producers,
             final EndlessSortedConsumer<T> consumer
     ) {
         var executor = Executors.newScheduledThreadPool(producers.size());
         producers.forEach(producer -> executor.scheduleAtFixedRate(
-                () -> consumer.offer(producer.poll()),
+                () -> {
+                    var element = producer.poll();
+                    if (element != null) consumer.offer(element);
+                },
                 0,
                 100,
                 TimeUnit.MILLISECONDS
         ));
+        return executor::shutdown;
     }
 }

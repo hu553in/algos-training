@@ -156,21 +156,21 @@ class SolutionsTest {
                 new EndlessSortedProducerImpl()
         );
         var actualConsumer = new EndlessSortedConsumerImpl<Long>();
-        solutions.mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue(
+        var shutdown = solutions.mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue(
                 producers,
                 actualConsumer
         );
         Thread.sleep(5000);
+        shutdown.run();
+        var actualConsumerList = actualConsumer.toList();
         var expectedConsumer = new EndlessSortedConsumerImpl<Long>();
-        expectedConsumer.offer(0L);
-        expectedConsumer.offer(0L);
-        expectedConsumer.offer(1L);
-        expectedConsumer.offer(1L);
-        expectedConsumer.offer(2L);
-        expectedConsumer.offer(2L);
+        for (var i = 0L; i < actualConsumerList.size() / 2; i++) {
+            expectedConsumer.offer(i);
+            expectedConsumer.offer(i);
+        }
         Assertions.assertEquals(
                 expectedConsumer.toList(),
-                actualConsumer.toList().subList(0, 6)
+                actualConsumerList
         );
     }
 }
