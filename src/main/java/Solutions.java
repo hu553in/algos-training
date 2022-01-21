@@ -13,14 +13,17 @@ public class Solutions {
     /**
      * Validate different types of brackets — (), [], {} — via stack
      */
-    public boolean validateDifferentBracketsViaStack(final String s) {
+    public boolean validateDifferentBracketsViaStack(final String string) {
+        if (string == null) {
+            return false;
+        }
         var closingForOpening = Map.of(
                 '(', ')',
                 '[', ']',
                 '{', '}'
         );
         var stack = new ArrayDeque<Character>();
-        var chars = s.toCharArray();
+        var chars = string.toCharArray();
         for (var newChar : chars) {
             if (closingForOpening.containsKey(newChar)) {
                 stack.push(newChar);
@@ -42,10 +45,13 @@ public class Solutions {
      * Validate round brackets only — () — via MapReduce (without stack)
      */
     public boolean validateRoundBracketsViaMapReduce(
-            final String s,
+            final String string,
             final int pieceLength
     ) throws InterruptedException {
-        var pieceCount = (int) Math.ceil((double) s.length() / pieceLength);
+        if (string == null) {
+            return false;
+        }
+        var pieceCount = (int) Math.ceil((double) string.length() / pieceLength);
         var executor = Executors.newFixedThreadPool(pieceCount);
         try {
             var total = new AtomicLong();
@@ -55,10 +61,13 @@ public class Solutions {
                 final var finalIndex = i;
                 executor.submit(() -> {
                     var pieceEndExclusiveIndex = pieceLength * (finalIndex + 1);
-                    if (pieceEndExclusiveIndex > s.length()) {
-                        pieceEndExclusiveIndex = s.length();
+                    if (pieceEndExclusiveIndex > string.length()) {
+                        pieceEndExclusiveIndex = string.length();
                     }
-                    var piece = s.substring(pieceLength * finalIndex, pieceEndExclusiveIndex).toCharArray();
+                    var piece = string.substring(
+                            pieceLength * finalIndex,
+                            pieceEndExclusiveIndex
+                    ).toCharArray();
                     var maxDeviation = 0L;
                     var localTotal = 0L;
                     for (var character : piece) {
@@ -94,6 +103,9 @@ public class Solutions {
      * Concurrent merge sort
      */
     public <T extends Comparable<T>> T[] concurrentMergeSort(final T[] array) throws Exception {
+        if (array == null || Arrays.stream(array).anyMatch(Objects::isNull)) {
+            return null;
+        }
         var executor = Executors.newCachedThreadPool();
         try {
             return executor.submit(() -> {
@@ -144,6 +156,15 @@ public class Solutions {
             final LinkedList<Integer> first,
             final LinkedList<Integer> second
     ) {
+        if (first == null || second == null || (first.isEmpty() && second.isEmpty())) {
+            return null;
+        }
+        if (first.isEmpty()) {
+            return second;
+        }
+        if (second.isEmpty()) {
+            return first;
+        }
         var sum = new LinkedList<Integer>();
         var remainder = 0;
         for (int i = 0, j = 0; i < first.size() || j < second.size(); i++, j++) {
@@ -163,6 +184,9 @@ public class Solutions {
      * Sort array of fixed number set — e.g. 0, 1, 2 — with O(n) complexity
      */
     public int[] sortArrayOfFixedNumberSet(int[] array) {
+        if (array == null) {
+            return null;
+        }
         var countingMap = new TreeMap<Integer, Integer>();
         for (var elem : array) {
             countingMap.compute(elem, (k, v) -> v == null ? 1 : v + 1);
@@ -189,6 +213,9 @@ public class Solutions {
      * @param targetIndex          index of target person in queue
      */
     public int tickets(final int[] requiredTicketCounts, final int targetIndex) {
+        if (requiredTicketCounts == null || requiredTicketCounts.length == 0 || targetIndex < 0) {
+            return -1;
+        }
         var queueLength = requiredTicketCounts.length - 1;
         var iterations = 0;
         var mutableTargetIndex = targetIndex;
@@ -217,6 +244,9 @@ public class Solutions {
      * Convert binary search tree to list
      */
     public <T> List<T> convertBinarySearchTreeToList(final BinaryTreeNode<T> rootNode) {
+        if (rootNode == null) {
+            return null;
+        }
         var result = new LinkedList<T>();
         var mutableRootNode = rootNode;
         var currentNode = mutableRootNode;
@@ -241,7 +271,6 @@ public class Solutions {
         return result;
     }
 
-
     /**
      * Convert binary search tree to list with recursion
      */
@@ -258,21 +287,33 @@ public class Solutions {
     /**
      * Check whether binary tree is binary search tree
      */
-    public <T extends Comparable<T>> boolean isBinaryTreeSearch(final BinaryTreeNode<T> rootNode) {
-        var result = true;
+    public <T extends Comparable<T>> boolean isBinaryTreeSearch(
+            final BinaryTreeNode<T> rootNode,
+            final T lowerBoundExclusive,
+            final T upperBoundExclusive
+    ) {
         if (rootNode != null) {
-            if (rootNode.hasLeftChild()) {
-                result = rootNode.getValue().compareTo(rootNode.getLeftChild().getValue()) > 0;
-                result &= isBinaryTreeSearch(rootNode.getLeftChild());
+            var rootNodeValue = rootNode.getValue();
+            if (lowerBoundExclusive != null && rootNodeValue.compareTo(lowerBoundExclusive) <= 0) {
+                return false;
             }
-            if (rootNode.hasRightChild()) {
-                result &= rootNode.getValue().compareTo(rootNode.getRightChild().getValue()) < 0;
-                result &= isBinaryTreeSearch(rootNode.getRightChild());
+            if (upperBoundExclusive != null && rootNodeValue.compareTo(upperBoundExclusive) >= 0) {
+                return false;
+            }
+            var leftChild = rootNode.getLeftChild();
+            if (leftChild != null &&
+                    (leftChild.getValue().compareTo(rootNodeValue) >= 0 ||
+                            !isBinaryTreeSearch(leftChild, lowerBoundExclusive, rootNodeValue))) {
+                return false;
+            }
+            var rightChild = rootNode.getRightChild();
+            if (rightChild != null) {
+                return rightChild.getValue().compareTo(rootNodeValue) > 0 &&
+                        isBinaryTreeSearch(rightChild, rootNodeValue, upperBoundExclusive);
             }
         }
-        return result;
+        return true;
     }
-
 
     /**
      * Merge list of endless sorted producer queues into single endless sorted consumer queue
@@ -281,6 +322,9 @@ public class Solutions {
             final List<? extends EndlessSortedProducer<T>> producers,
             final EndlessSortedConsumer<T> consumer
     ) {
+        if (producers == null || producers.isEmpty() || consumer == null) {
+            return null;
+        }
         var executor = Executors.newScheduledThreadPool(producers.size());
         producers.forEach(producer -> executor.scheduleAtFixedRate(
                 () -> {
@@ -306,5 +350,39 @@ public class Solutions {
             mirrorBinaryTree(rootNode.getRightChild());
         }
         return rootNode;
+    }
+
+    /**
+     * Find unpaired element in array of paired elements, e.g.:
+     * [ 1, 1, 5, 3, 3, 4, 4 ] -> 2
+     */
+    public <T> int findUnpairedElementInArrayOfPairedElements(final T[] array) {
+        if (array == null || array.length % 2 == 0) {
+            return -1;
+        }
+        if (array.length == 1) {
+            return 0;
+        }
+        var startIndex = 0;
+        var endIndex = array.length - 1;
+        while (startIndex != endIndex) {
+            var middle = (startIndex + endIndex + 1) / 2;
+            if (array[middle] == array[middle - 1]) {
+                if ((middle - startIndex) % 2 == 0) {
+                    endIndex = middle - 1;
+                } else {
+                    startIndex = middle + 1;
+                }
+            } else if (array[middle] == array[middle + 1]) {
+                if ((endIndex - middle) % 2 == 0) {
+                    startIndex = middle + 1;
+                } else {
+                    endIndex = middle - 1;
+                }
+            } else {
+                return middle;
+            }
+        }
+        return startIndex;
     }
 }

@@ -139,13 +139,13 @@ class SolutionsTest {
         leftChild.setRightChild(new BinaryTreeNode<>(7));
         rightChild.setLeftChild(new BinaryTreeNode<>(13));
 
-        Assertions.assertTrue(solutions.isBinaryTreeSearch(root));
+        Assertions.assertTrue(solutions.isBinaryTreeSearch(root, null, null));
     }
 
     @Test
     void isBinaryTreeSearch_singleElementTrue() {
         var root = new BinaryTreeNode<>(10);
-        Assertions.assertTrue(solutions.isBinaryTreeSearch(root));
+        Assertions.assertTrue(solutions.isBinaryTreeSearch(root, null, null));
     }
 
     @Test
@@ -155,7 +155,7 @@ class SolutionsTest {
         var rightChild = new BinaryTreeNode<>(15);
         root.setLeftChild(leftChild);
         root.setRightChild(rightChild);
-        Assertions.assertFalse(solutions.isBinaryTreeSearch(root));
+        Assertions.assertFalse(solutions.isBinaryTreeSearch(root, null, null));
     }
 
     @Test
@@ -218,5 +218,24 @@ class SolutionsTest {
         Assertions.assertNull(node15.getLeftChild());
         Assertions.assertNull(node13.getLeftChild());
         Assertions.assertNull(node13.getRightChild());
+    }
+
+    @Test
+    void findUnpairedElementInArrayOfPairedElements() {
+        Assertions.assertEquals(-1, solutions.findUnpairedElementInArrayOfPairedElements(null));
+        Assertions.assertEquals(-1, solutions.findUnpairedElementInArrayOfPairedElements(new Integer[]{}));
+        Assertions.assertEquals(0, solutions.findUnpairedElementInArrayOfPairedElements(new Integer[]{1}));
+        Assertions.assertEquals(2, solutions.findUnpairedElementInArrayOfPairedElements(
+                new Integer[]{1, 1, 3, 4, 4, 5, 5, 6, 6})
+        );
+        Assertions.assertEquals(4, solutions.findUnpairedElementInArrayOfPairedElements(
+                new Integer[]{1, 1, 4, 4, 3, 5, 5})
+        );
+        Assertions.assertEquals(6, solutions.findUnpairedElementInArrayOfPairedElements(
+                new Integer[]{1, 1, 6, 6, 4, 4, 3, 5, 5})
+        );
+        Assertions.assertEquals(2, solutions.findUnpairedElementInArrayOfPairedElements(
+                new Integer[]{1, 1, 3, 4, 4, 5, 5})
+        );
     }
 }
