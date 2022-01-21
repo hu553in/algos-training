@@ -320,7 +320,7 @@ public class Solutions {
             final Comparator<T> comparator
     ) {
         if (producers == null || producers.isEmpty() || consumer == null) {
-            return CompletableFuture.failedFuture(new Exception());
+            return CompletableFuture.failedFuture(new Exception("Invalid input data"));
         }
         return CompletableFuture.runAsync(() -> {
             var buffer = new TreeMap<T, List<Integer>>(comparator);
