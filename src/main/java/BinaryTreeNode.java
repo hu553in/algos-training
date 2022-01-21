@@ -1,5 +1,3 @@
-package binary_tree;
-
 public class BinaryTreeNode<T> {
     private final T value;
     private BinaryTreeNode<T> parent;

@@ -1,11 +1,13 @@
-import binary_tree.BinaryTreeNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import queue.consumer.EndlessSortedConsumerImpl;
-import queue.producer.EndlessSortedProducerImpl;
+import org.mockito.Mockito;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
+import static org.mockito.Mockito.*;
 
 class SolutionsTest {
     private final Solutions solutions = new Solutions();
@@ -160,27 +162,28 @@ class SolutionsTest {
 
     @Test
     void mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue() throws InterruptedException {
-        var producers = List.of(
-                new EndlessSortedProducerImpl(),
-                new EndlessSortedProducerImpl()
-        );
-        var actualConsumer = new EndlessSortedConsumerImpl<Long>();
-        var shutdown = solutions.mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue(
+        @SuppressWarnings("unchecked")
+        var firstProducer = (Queue<Integer>) mock(Queue.class);
+        @SuppressWarnings("unchecked")
+        var secondProducer = (Queue<Integer>) mock(Queue.class);
+        @SuppressWarnings("unchecked")
+        var consumer = (Queue<Integer>) mock(Queue.class);
+
+        when(firstProducer.poll()).thenReturn(1, 2, 3, null);
+        when(secondProducer.poll()).thenReturn(1, 2, 3, null);
+        when(consumer.offer(Mockito.anyInt())).thenReturn(true, true, true, true, true, true, false);
+
+        var producers = List.of(firstProducer, secondProducer);
+        solutions.mergeSortedProducersIntoSingleSortedConsumer(
                 producers,
-                actualConsumer
-        );
-        Thread.sleep(5000);
-        shutdown.run();
-        var actualConsumerList = actualConsumer.toList();
-        var expectedConsumer = new EndlessSortedConsumerImpl<Long>();
-        for (var i = 0L; i < actualConsumerList.size() / 2; i++) {
-            expectedConsumer.offer(i);
-            expectedConsumer.offer(i);
-        }
-        Assertions.assertEquals(
-                expectedConsumer.toList(),
-                actualConsumerList
-        );
+                consumer,
+                Comparator.naturalOrder()
+        ).thenRunAsync(() -> {
+            var inOrder = Mockito.inOrder(consumer);
+            inOrder.verify(consumer, times(2)).offer(1);
+            inOrder.verify(consumer, times(2)).offer(2);
+            inOrder.verify(consumer, times(2)).offer(3);
+        });
     }
 
     @Test

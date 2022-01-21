@@ -1,11 +1,7 @@
-import binary_tree.BinaryTreeNode;
-import queue.consumer.EndlessSortedConsumer;
-import queue.producer.EndlessSortedProducer;
-
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -316,26 +312,53 @@ public class Solutions {
     }
 
     /**
-     * Merge list of endless sorted producer queues into single endless sorted consumer queue
+     * Merge list of sorted producer queues into single sorted consumer queue
      */
-    public <T> Runnable mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue(
-            final List<? extends EndlessSortedProducer<T>> producers,
-            final EndlessSortedConsumer<T> consumer
+    public <T extends Comparable<T>> CompletableFuture<Void> mergeSortedProducersIntoSingleSortedConsumer(
+            final List<? extends Queue<T>> producers,
+            final Queue<T> consumer,
+            final Comparator<T> comparator
     ) {
         if (producers == null || producers.isEmpty() || consumer == null) {
-            return null;
+            return CompletableFuture.failedFuture(new Exception());
         }
-        var executor = Executors.newScheduledThreadPool(producers.size());
-        producers.forEach(producer -> executor.scheduleAtFixedRate(
-                () -> {
-                    var element = producer.poll();
-                    if (element != null) consumer.offer(element);
-                },
-                0,
-                100,
-                TimeUnit.MILLISECONDS
-        ));
-        return executor::shutdown;
+        return CompletableFuture.runAsync(() -> {
+            var buffer = new TreeMap<T, List<Integer>>(comparator);
+            for (var i = 0; i < producers.size(); i++) {
+                var element = producers.get(i).poll();
+                if (element != null) {
+                    if (buffer.containsKey(element)) {
+                        buffer.get(element).add(i);
+                    } else {
+                        final int producerIndex = i;
+                        buffer.put(element, new LinkedList<>() {{
+                            add(producerIndex);
+                        }});
+                    }
+                }
+            }
+            var offerResult = true;
+            while (!buffer.isEmpty() && offerResult) {
+                var min = buffer.firstEntry();
+                if (min != null) {
+                    offerResult = consumer.offer(min.getKey());
+                    var producerIndex = min.getValue().remove(0);
+                    if (min.getValue().isEmpty()) {
+                        buffer.remove(min.getKey());
+                    }
+                    var element = producers.get(producerIndex).poll();
+                    if (element != null) {
+                        if (buffer.containsKey(element)) {
+                            buffer.get(element).add(producerIndex);
+                        } else {
+                            buffer.put(element, new LinkedList<>() {{
+                                add(producerIndex);
+                            }});
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
