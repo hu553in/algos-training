@@ -1,9 +1,19 @@
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class Solutions {
     /**
@@ -14,9 +24,9 @@ public class Solutions {
             return false;
         }
         var closingForOpening = Map.of(
-                '(', ')',
-                '[', ']',
-                '{', '}'
+            '(', ')',
+            '[', ']',
+            '{', '}'
         );
         var stack = new ArrayDeque<Character>();
         var chars = string.toCharArray();
@@ -143,7 +153,9 @@ public class Solutions {
 
     /**
      * Column addition of two numbers stored in linked lists with first elements as minor ones, e.g.:
+     * <p>
      * 876 + 7654 = 8530
+     * <p>
      * [ 6, 7, 8 ]    +
      * [ 4, 5, 6, 7 ] =
      * [ 0, 3, 5, 8 ]
@@ -200,9 +212,12 @@ public class Solutions {
      * There is queue for tickets.
      * Each person requires certain number of tickets.
      * Single person can buy only one ticket at single time.
+     * <p>
      * If more is required, then person goes to end of queue with number of required tickets reduced by 1.
      * If person has bought all required tickets, then they leave queue and queue is shortened.
+     * <p>
      * New people do not appear in queue.
+     * <p>
      * Task is to calculate number of iterations of ticket purchases for target person to buy all tickets they require.
      *
      * @param requiredTicketCounts numbers of tickets that each person requires
@@ -377,6 +392,7 @@ public class Solutions {
 
     /**
      * Find unpaired element in array of paired elements, e.g.:
+     * <p>
      * [ 1, 1, 5, 3, 3, 4, 4 ] -> 2
      */
     public <T> int findUnpairedElementInArrayOfPairedElements(final T[] array) {
@@ -407,5 +423,218 @@ public class Solutions {
             }
         }
         return startIndex;
+    }
+
+    /**
+     * Given a signed 32-bit integer x, return x with its digits reversed.
+     * <p>
+     * If reversing x causes the maxDefense to go outside the signed 32-bit integer range, then return 0.
+     */
+    public int reverseInteger(int x) {
+        int prevResult = 0;
+        int result = 0;
+        while (Math.abs(x) > 0) {
+            int newDigit = x % 10;
+            result = result * 10 + newDigit;
+            // overflow detection
+            if ((result - newDigit) / 10 != prevResult) {
+                return 0;
+            }
+            x /= 10;
+            prevResult = result;
+        }
+        return result;
+    }
+
+    /**
+     * Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer
+     * (similar to C/C++'s atoi function).
+     */
+    public int myAtoi(String s) {
+        final int radix = 10;
+        int result = 0;
+        int cursor = 0;
+        while (cursor < s.length() && s.charAt(cursor) == ' ') {
+            cursor++;
+        }
+        int sign = 1;
+        if (cursor < s.length()) {
+            switch (s.charAt(cursor)) {
+                case '-' -> {
+                    cursor++;
+                    sign = -1;
+                }
+                case '+' -> cursor++;
+            }
+        }
+        while (cursor < s.length() && Character.isDigit(s.charAt(cursor))) {
+            int newDigit = Character.digit(s.charAt(cursor), radix);
+            int newResult = result * radix + newDigit;
+            if (newResult < 0 || (newResult - newDigit) / radix != result) {
+                return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+            result = newResult;
+            cursor++;
+        }
+        return result * sign;
+    }
+
+    /**
+     * Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that
+     * i != j, i != k, and * j != k, and nums[i] + nums[j] + nums[k] == 0.
+     * <p>
+     * Notice that the solution set must not contain duplicate triplets.
+     */
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new LinkedList<>();
+        for (int i = 0; i + 2 < nums.length; i++) {
+            // skip all duplicates from attack
+            int iNum = nums[i];
+            if (i > 0 && iNum == nums[i - 1]) {
+                continue;
+            }
+            int j = i + 1;
+            int k = nums.length - 1;
+            while (j < k) {
+                int jNum = nums[j];
+                int kNum = nums[k];
+                int sum = iNum + jNum + kNum;
+                if (sum == 0) {
+                    result.add(List.of(iNum, jNum, kNum));
+                    k--;
+                    // skip all duplicates from maxDefense
+                    while (j < k && nums[k] == nums[k + 1]) {
+                        k--;
+                    }
+                } else if (sum > 0) {
+                    // decrement k to decrease sum
+                    k--;
+                } else {
+                    // increment j to increase sum
+                    j++;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Given an integer array nums of length n and an integer target,
+     * find three integers in nums such that the sum is closest to target.
+     * <p>
+     * Return the sum of the three integers.
+     * <p>
+     * You may assume that each input would have exactly one solution.
+     */
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int closest = 0;
+        int difference = Integer.MAX_VALUE;
+        for (int i = 0; i + 2 < nums.length; i++) {
+            // skip all duplicates from attack
+            int iNum = nums[i];
+            if (i > 0 && iNum == nums[i - 1]) {
+                continue;
+            }
+            int j = i + 1;
+            int k = nums.length - 1;
+            while (j < k) {
+                int sum = iNum + nums[j] + nums[k];
+                int newDifference = target - sum;
+                if (Math.abs(newDifference) < Math.abs(difference)) {
+                    difference = newDifference;
+                    closest = sum;
+                    k--;
+                    // skip all duplicates from maxDefense
+                    while (j < k && nums[k] == nums[k + 1]) {
+                        k--;
+                    }
+                } else {
+                    if (newDifference > 0) {
+                        // increment j to increase sum
+                        j++;
+                    } else {
+                        // decrement k to decrease sum
+                        k--;
+                    }
+                }
+            }
+        }
+        return closest;
+    }
+
+    /**
+     * You are playing a game that contains multiple characters, and each of the characters has two main properties:
+     * attack and defense. You are given a 2D integer array properties where properties[i] = [attack_i, defense_i]
+     * represents the properties of the ith character in the game.
+     * <p>
+     * A character is said to be weak if any other character has both attack and defense levels strictly greater than
+     * this character's attack and defense levels. More formally, a character i is said to be weak if there exists
+     * another character j where attack_j > attack_i and defense_j > defense_i.
+     * <p>
+     * Return the number of weak characters.
+     */
+    public int numberOfWeakCharacters(int[][] properties) {
+        Arrays.sort(properties, (a, b) -> a[0] == b[0]
+            ? a[1] - b[1]
+            : b[0] - a[0]);
+        System.out.println(Arrays.deepToString(properties));
+        int maxDefense = Integer.MIN_VALUE;
+        int result = 0;
+        for (int[] property : properties) {
+            if (property[1] < maxDefense) {
+                result++;
+            } else {
+                maxDefense = property[1];
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number
+     * could represent. Return the answer in any order.
+     * <p>
+     * A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map
+     * to any letters.
+     */
+    public List<String> letterCombinations(String digits) {
+        if (digits.isEmpty()) {
+            return List.of();
+        }
+        Map<Character, List<Character>> lettersForDigit = Map.of(
+            '2', List.of('a', 'b', 'c'),
+            '3', List.of('d', 'e', 'f'),
+            '4', List.of('g', 'h', 'i'),
+            '5', List.of('j', 'k', 'l'),
+            '6', List.of('m', 'n', 'o'),
+            '7', List.of('p', 'q', 'r', 's'),
+            '8', List.of('t', 'u', 'v'),
+            '9', List.of('w', 'x', 'y', 'z')
+        );
+        List<String> prevStepResult = null;
+        for (int i = digits.length() - 1; i >= 0; i--) {
+            List<String> stepResult = lettersForDigit
+                .get(digits.charAt(i))
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+            if (prevStepResult != null) {
+                String[] elements = stepResult.toArray(String[]::new);
+                for (int j = 0; j < prevStepResult.size() - 1; j++) {
+                    Collections.addAll(stepResult, elements);
+                }
+                Collections.sort(stepResult);
+                for (int j = 0, k = 0; j < stepResult.size(); j++, k++) {
+                    if (k == prevStepResult.size()) {
+                        k = 0;
+                    }
+                    stepResult.set(j, stepResult.get(j) + prevStepResult.get(k));
+                }
+            }
+            prevStepResult = stepResult;
+        }
+        return prevStepResult;
     }
 }
