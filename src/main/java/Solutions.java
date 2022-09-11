@@ -1,6 +1,6 @@
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +13,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 public class Solutions {
     /**
@@ -603,38 +602,38 @@ public class Solutions {
         if (digits.isEmpty()) {
             return List.of();
         }
-        Map<Character, List<Character>> lettersForDigit = Map.of(
-            '2', List.of('a', 'b', 'c'),
-            '3', List.of('d', 'e', 'f'),
-            '4', List.of('g', 'h', 'i'),
-            '5', List.of('j', 'k', 'l'),
-            '6', List.of('m', 'n', 'o'),
-            '7', List.of('p', 'q', 'r', 's'),
-            '8', List.of('t', 'u', 'v'),
-            '9', List.of('w', 'x', 'y', 'z')
+        Map<Character, List<String>> lettersForDigit = Map.of(
+            '2', List.of("a", "b", "c"),
+            '3', List.of("d", "e", "f"),
+            '4', List.of("g", "h", "i"),
+            '5', List.of("j", "k", "l"),
+            '6', List.of("m", "n", "o"),
+            '7', List.of("p", "q", "r", "s"),
+            '8', List.of("t", "u", "v"),
+            '9', List.of("w", "x", "y", "z")
         );
-        List<String> prevStepResult = null;
-        for (int i = digits.length() - 1; i >= 0; i--) {
-            List<String> stepResult = lettersForDigit
-                .get(digits.charAt(i))
-                .stream()
-                .map(String::valueOf)
-                .collect(Collectors.toList());
-            if (prevStepResult != null) {
-                String[] elements = stepResult.toArray(String[]::new);
-                for (int j = 0; j < prevStepResult.size() - 1; j++) {
-                    Collections.addAll(stepResult, elements);
-                }
-                Collections.sort(stepResult);
-                for (int j = 0, k = 0; j < stepResult.size(); j++, k++) {
-                    if (k == prevStepResult.size()) {
-                        k = 0;
-                    }
-                    stepResult.set(j, stepResult.get(j) + prevStepResult.get(k));
-                }
-            }
-            prevStepResult = stepResult;
+        List<String> lettersForFirstDigit = lettersForDigit.get(digits.charAt(0));
+        if (digits.length() == 1) {
+            return lettersForFirstDigit;
         }
-        return prevStepResult;
+        List<String> combinationsForNextDigits = letterCombinations(digits.substring(1));
+        int combinationsForDigitsCount = lettersForFirstDigit.size() * combinationsForNextDigits.size();
+        List<String> combinationsForDigits = new ArrayList<>(combinationsForDigitsCount);
+        for (String letterForFirstDigit : lettersForFirstDigit) {
+            for (int i = 0; i < combinationsForNextDigits.size(); i++) {
+                combinationsForDigits.add(letterForFirstDigit);
+            }
+        }
+        for (int combinationForDigit = 0, combinationForNextDigits = 0;
+             combinationForDigit < combinationsForDigits.size();
+             combinationForDigit++, combinationForNextDigits++) {
+            if (combinationForNextDigits == combinationsForNextDigits.size()) {
+                combinationForNextDigits = 0;
+            }
+            combinationsForDigits.set(combinationForDigit,
+                combinationsForDigits.get(combinationForDigit)
+                    + combinationsForNextDigits.get(combinationForNextDigits));
+        }
+        return combinationsForDigits;
     }
 }
