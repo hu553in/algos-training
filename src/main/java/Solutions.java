@@ -2,6 +2,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -688,5 +689,129 @@ public class Solutions {
             next.next = swapPairs(next.next);
         }
         return newHead;
+    }
+
+    /**
+     * Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+     */
+    public List<String> generateParenthesis(int n) {
+        List<String> result = new LinkedList<>();
+        generateParenthesis(n, new StringBuilder(), 0, 0, result);
+        return result;
+    }
+
+    private void generateParenthesis(int count, StringBuilder sb, int left, int right, List<String> result) {
+        if (left == count && right == count) {
+            result.add(sb.toString());
+        } else {
+            if (left < count) {
+                generateParenthesis(count, new StringBuilder(sb).append('('), left + 1, right, result);
+            }
+            if (right < left) {
+                generateParenthesis(count, new StringBuilder(sb).append(')'), left, right + 1, result);
+            }
+        }
+    }
+
+    /**
+     * Find the longest sequence of 1 in a binary vector, which can be achieved by deleting any single element.
+     * Single element must be removed.
+     * Space = O(1), time = O(n).
+     */
+    public int findLongest1SequenceAfterDeletingSingleElement(int[] nums) {
+        int max = 0;
+        int prev = 0;
+        int current = 0;
+        for (int num : nums) {
+            max = Math.max(prev + current, max);
+            if (num == 1) {
+                current++;
+            } else {
+                prev = Math.max(current, 0);
+                current = 0;
+            }
+        }
+        if (current > 0) {
+            max = Math.max(prev + current, max);
+        }
+        if (max == nums.length) {
+            return max - 1;
+        }
+        return max;
+    }
+
+    /**
+     * Get intersection of sorted arrays
+     */
+    public int[] getIntersectionOfSortedArrays(int[] array1, int[] array2) {
+        int[] result = new int[Math.min(array1.length, array2.length)];
+        int index1 = 0;
+        int index2 = 0;
+        int resultIndex = 0;
+        while (resultIndex < result.length) {
+            if (array1[index1] == array2[index2]) {
+                result[resultIndex] = array1[index1];
+                resultIndex++;
+                if (index1 < array1.length - 1) {
+                    index1++;
+                }
+                if (index2 < array2.length - 1) {
+                    index2++;
+                }
+            } else if (array1[index1] > array2[index2]) {
+                if (index2 < array2.length - 1) {
+                    index2++;
+                } else {
+                    break;
+                }
+            } else {
+                if (index1 < array1.length - 1) {
+                    index1++;
+                } else {
+                    break;
+                }
+            }
+        }
+        return Arrays.copyOfRange(result, 0, resultIndex);
+    }
+
+    /**
+     * Check if two strings are anagrams
+     */
+    public boolean areAnagrams(String string1, String string2) {
+        Map<Character, Integer> stringCharCountMap1 = getStringCharCountMap(string1);
+        Map<Character, Integer> stringCharCountMap2 = getStringCharCountMap(string2);
+        return Objects.equals(stringCharCountMap1, stringCharCountMap2);
+    }
+
+    private Map<Character, Integer> getStringCharCountMap(String string) {
+        Map<Character, Integer> result = new HashMap<>();
+        string
+            .chars()
+            .forEach(c -> result.compute((char) c, (k, v) -> v == null ? 1 : v + 1));
+        return result;
+    }
+
+    /**
+     * Find the longest sequence of 1 in a binary vector.
+     * Space = O(1), time = O(n).
+     */
+    public int findLongest1SequenceInBinaryVector(int[] binaryVector) {
+        int max = 0;
+        int current = 0;
+        for (int num : binaryVector) {
+            if (num == 1) {
+                current++;
+            } else {
+                if (current > max) {
+                    max = current;
+                }
+                current = 0;
+            }
+        }
+        if (current > max) {
+            max = current;
+        }
+        return max;
     }
 }

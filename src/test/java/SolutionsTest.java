@@ -386,6 +386,54 @@ class SolutionsTest {
             convertListNodesToList(solutions.swapPairs(convertListToListNodes(List.of(1)))));
     }
 
+    @Test
+    void generateParenthesis() {
+        assertCollectionsEqualUnordered(List.of("()"), solutions.generateParenthesis(1));
+        assertCollectionsEqualUnordered(List.of("(())", "()()"), solutions.generateParenthesis(2));
+        assertCollectionsEqualUnordered(
+            List.of("((()))", "(()())", "(())()", "()(())", "()()()"),
+            solutions.generateParenthesis(3));
+    }
+
+    @Test
+    void findLongest1SequenceAfterDeletingSingleElement() {
+        assertEquals(
+            6,
+            solutions.findLongest1SequenceAfterDeletingSingleElement(new int[] {1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1}));
+        assertEquals(
+            5,
+            solutions.findLongest1SequenceAfterDeletingSingleElement(new int[] {1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1}));
+        assertEquals(
+            2,
+            solutions.findLongest1SequenceAfterDeletingSingleElement(new int[] {1, 1, 1}));
+    }
+
+    @Test
+    void findLongest1SequenceInBinaryVector() {
+        assertEquals(
+            5,
+            solutions.findLongest1SequenceInBinaryVector(new int[] {1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1}));
+        assertEquals(0, solutions.findLongest1SequenceInBinaryVector(new int[] {0, 0, 0}));
+    }
+
+    @Test
+    void areAnagrams() {
+        assertTrue(solutions.areAnagrams("number", "bernum"));
+        assertFalse(solutions.areAnagrams("number", "numbers"));
+    }
+
+    @Test
+    void getIntersectionOfSortedArrays() {
+        assertArrayEquals(new int[] {2, 3}, solutions.getIntersectionOfSortedArrays(
+            new int[] {1, 2, 3, 5},
+            new int[] {0, 2, 3, 8}
+        ));
+        assertArrayEquals(new int[0], solutions.getIntersectionOfSortedArrays(
+            new int[] {1, 5, 7, 9},
+            new int[] {0, 2, 3, 8}
+        ));
+    }
+
     private <T extends Comparable<T>> void assertCollectionsEqualUnordered(List<T> first, List<T> second) {
         assertTrue(first.size() == second.size() && first.containsAll(second) && second.containsAll(first));
     }
