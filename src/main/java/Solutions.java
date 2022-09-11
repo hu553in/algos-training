@@ -636,4 +636,57 @@ public class Solutions {
         }
         return combinationsForDigits;
     }
+
+    /**
+     * Given the head of a linked list, remove the nth node from the end of the list and return its head.
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null) {
+            return null;
+        }
+        // let's assume that m = n + 1
+        final int m = n + 1;
+        int size = 1;
+        ListNode mthFromEnd = head;
+        ListNode current = head.next;
+        while (current != null) {
+            size++;
+            current = current.next;
+            if (m < size) {
+                mthFromEnd = mthFromEnd.next;
+            }
+        }
+        if (n == size) {
+            return head.next;
+        }
+        ListNode nthFromEnd = mthFromEnd.next;
+        mthFromEnd.next = nthFromEnd.next;
+        return head;
+    }
+
+    /**
+     * Given a linked list, swap every two adjacent nodes and return its head.
+     * You must solve the problem without modifying the values in the list's nodes
+     * (i.e., only nodes themselves may be changed.)
+     */
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode current = head;
+        ListNode next = current.next;
+        ListNode newHead = next;
+        // swap nodes
+        ListNode temp = next;
+        next = current;
+        current = temp;
+        // swap links in nodes
+        next.next = current.next;
+        current.next = next;
+        // go deeper
+        if (next.next != null) {
+            next.next = swapPairs(next.next);
+        }
+        return newHead;
+    }
 }

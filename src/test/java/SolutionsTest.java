@@ -354,7 +354,63 @@ class SolutionsTest {
             solutions.letterCombinations("234"));
     }
 
+    @Test
+    void removeNthFromEnd() {
+        assertEquals(
+            List.of(1, 2, 3, 5),
+            convertListNodesToList(solutions.removeNthFromEnd(convertListToListNodes(List.of(1, 2, 3, 4, 5)), 2)));
+        assertEquals(
+            List.of(1),
+            convertListNodesToList(solutions.removeNthFromEnd(convertListToListNodes(List.of(1, 2)), 1)));
+        assertEquals(
+            List.of(2),
+            convertListNodesToList(solutions.removeNthFromEnd(convertListToListNodes(List.of(1, 2)), 2)));
+        assertEquals(
+            List.of(),
+            convertListNodesToList(solutions.removeNthFromEnd(convertListToListNodes(List.of(1)), 1)));
+    }
+
+    @Test
+    void swapPairs() {
+        assertEquals(
+            List.of(2, 1, 4, 3, 6, 5, 8, 7, 9),
+            convertListNodesToList(solutions.swapPairs(convertListToListNodes(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9)))));
+        assertEquals(
+            List.of(2, 1, 4, 3, 6, 5, 8, 7),
+            convertListNodesToList(solutions.swapPairs(convertListToListNodes(List.of(1, 2, 3, 4, 5, 6, 7, 8)))));
+        assertEquals(
+            List.of(),
+            convertListNodesToList(solutions.swapPairs(convertListToListNodes(List.of()))));
+        assertEquals(
+            List.of(1),
+            convertListNodesToList(solutions.swapPairs(convertListToListNodes(List.of(1)))));
+    }
+
     private <T extends Comparable<T>> void assertCollectionsEqualUnordered(List<T> first, List<T> second) {
         assertTrue(first.size() == second.size() && first.containsAll(second) && second.containsAll(first));
+    }
+
+    private List<Integer> convertListNodesToList(ListNode head) {
+        LinkedList<Integer> result = new LinkedList<>();
+        ListNode current = head;
+        while (current != null) {
+            result.add(current.val);
+            current = current.next;
+        }
+        return result;
+    }
+
+    private ListNode convertListToListNodes(List<Integer> list) {
+        if (list.isEmpty()) {
+            return null;
+        }
+        ListNode head = new ListNode(list.get(0));
+        ListNode current = head;
+        for (int i = 1; i < list.size(); i++) {
+            ListNode newNode = new ListNode(list.get(i));
+            current.next = newNode;
+            current = newNode;
+        }
+        return head;
     }
 }
