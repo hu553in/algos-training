@@ -2,7 +2,7 @@ package solutions
 
 // https://leetcode.com/problems/median-of-two-sorted-arrays
 
-func FindMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+func FindMedianSortedArraysTwoPointers(nums1 []int, nums2 []int) float64 {
 	nums := make([]int, len(nums1)+len(nums2))
 	i := 0
 	j := 0
@@ -26,7 +26,7 @@ func FindMedianSortedArrays(nums1 []int, nums2 []int) float64 {
 		}
 	}
 	if len(nums)%2 == 0 {
-		return float64(nums[len(nums)/2]+nums[len(nums)/2-1]) / float64(2)
+		return float64(nums[len(nums)/2]+nums[len(nums)/2-1]) / 2
 	}
 	return float64(nums[len(nums)/2])
 }
