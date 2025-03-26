@@ -1,5 +1,11 @@
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
 public class BinaryTreeNode<T> {
+
     private final T value;
+    @Setter
     private BinaryTreeNode<T> parent;
     private BinaryTreeNode<T> leftChild;
     private BinaryTreeNode<T> rightChild;
@@ -8,38 +14,22 @@ public class BinaryTreeNode<T> {
         this.value = value;
     }
 
-    public BinaryTreeNode<T> getParent() {
-        return parent;
-    }
-
-    private void setParent(BinaryTreeNode<T> parent) {
-        this.parent = parent;
-    }
-
     public void removeParent() {
         parent = null;
     }
 
-    public BinaryTreeNode<T> getLeftChild() {
-        return leftChild;
-    }
-
     public void setLeftChild(BinaryTreeNode<T> leftChild) {
         this.leftChild = leftChild;
-        if (leftChild != null) leftChild.setParent(this);
-    }
-
-    public BinaryTreeNode<T> getRightChild() {
-        return rightChild;
+        if (leftChild != null) {
+            leftChild.setParent(this);
+        }
     }
 
     public void setRightChild(BinaryTreeNode<T> rightChild) {
         this.rightChild = rightChild;
-        if (rightChild != null) rightChild.setParent(this);
-    }
-
-    public T getValue() {
-        return value;
+        if (rightChild != null) {
+            rightChild.setParent(this);
+        }
     }
 
     public boolean hasParent() {

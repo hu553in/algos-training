@@ -16,6 +16,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 class SolutionsTest {
+
     private final Solutions solutions = new Solutions();
 
     @Test
