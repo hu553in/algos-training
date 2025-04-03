@@ -51,8 +51,8 @@ public class Solutions {
      * Validate round brackets only — () — via MapReduce (without stack)
      */
     public boolean validateRoundBracketsViaMapReduce(
-            final String string,
-            final int pieceLength
+        final String string,
+        final int pieceLength
     ) throws InterruptedException {
         if (string == null) {
             return false;
@@ -71,8 +71,8 @@ public class Solutions {
                         pieceEndExclusiveIndex = string.length();
                     }
                     var piece = string.substring(
-                            pieceLength * finalIndex,
-                            pieceEndExclusiveIndex
+                        pieceLength * finalIndex,
+                        pieceEndExclusiveIndex
                     ).toCharArray();
                     var maxDeviation = 0L;
                     var localTotal = 0L;
@@ -161,8 +161,8 @@ public class Solutions {
      * [ 0, 3, 5, 8 ]
      */
     public LinkedList<Integer> sumTwoNumbers(
-            final LinkedList<Integer> first,
-            final LinkedList<Integer> second
+        final LinkedList<Integer> first,
+        final LinkedList<Integer> second
     ) {
         if (first == null || second == null || (first.isEmpty() && second.isEmpty())) {
             return null;
@@ -299,9 +299,9 @@ public class Solutions {
      * Check whether binary tree is binary search tree
      */
     public <T extends Comparable<T>> boolean isBinaryTreeSearch(
-            final BinaryTreeNode<T> rootNode,
-            final T lowerBoundExclusive,
-            final T upperBoundExclusive
+        final BinaryTreeNode<T> rootNode,
+        final T lowerBoundExclusive,
+        final T upperBoundExclusive
     ) {
         if (rootNode != null) {
             var rootNodeValue = rootNode.getValue();
@@ -313,14 +313,14 @@ public class Solutions {
             }
             var leftChild = rootNode.getLeftChild();
             if (leftChild != null &&
-                    (leftChild.getValue().compareTo(rootNodeValue) >= 0 ||
-                            !isBinaryTreeSearch(leftChild, lowerBoundExclusive, rootNodeValue))) {
+                (leftChild.getValue().compareTo(rootNodeValue) >= 0 ||
+                    !isBinaryTreeSearch(leftChild, lowerBoundExclusive, rootNodeValue))) {
                 return false;
             }
             var rightChild = rootNode.getRightChild();
             if (rightChild != null) {
                 return rightChild.getValue().compareTo(rootNodeValue) > 0 &&
-                        isBinaryTreeSearch(rightChild, rootNodeValue, upperBoundExclusive);
+                    isBinaryTreeSearch(rightChild, rootNodeValue, upperBoundExclusive);
             }
         }
         return true;
@@ -330,9 +330,9 @@ public class Solutions {
      * Merge list of sorted producer queues into single sorted consumer queue
      */
     public <T extends Comparable<T>> CompletableFuture<Void> mergeSortedProducersIntoSingleSortedConsumer(
-            final List<? extends Queue<T>> producers,
-            final Queue<T> consumer,
-            final Comparator<T> comparator
+        final List<? extends Queue<T>> producers,
+        final Queue<T> consumer,
+        final Comparator<T> comparator
     ) {
         if (producers == null || producers.isEmpty() || consumer == null) {
             return CompletableFuture.failedFuture(new Exception("Invalid input data"));

@@ -182,9 +182,9 @@ class SolutionsTest {
 
         var producers = List.of(firstProducer, secondProducer);
         solutions.mergeSortedProducersIntoSingleSortedConsumer(
-                producers,
-                consumer,
-                Comparator.naturalOrder()
+            producers,
+            consumer,
+            Comparator.naturalOrder()
         ).thenRunAsync(() -> {
             var inOrder = Mockito.inOrder(consumer);
             inOrder.verify(consumer, times(2)).offer(1);
