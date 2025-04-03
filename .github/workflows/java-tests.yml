@@ -2,11 +2,8 @@ name: Java tests
 
 on:
   push:
-    paths:
-      - "java/**"
-  pull_request:
-    paths:
-      - "java/**"
+    branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   test:
