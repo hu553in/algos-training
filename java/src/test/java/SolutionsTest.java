@@ -168,7 +168,7 @@ class SolutionsTest {
     }
 
     @Test
-    void mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue() throws InterruptedException {
+    void mergeEndlessSortedProducerQueuesIntoSingleEndlessSortedConsumerQueue() {
         @SuppressWarnings("unchecked")
         var firstProducer = (Queue<Integer>) mock(Queue.class);
         @SuppressWarnings("unchecked")

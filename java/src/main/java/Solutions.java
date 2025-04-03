@@ -58,8 +58,7 @@ public class Solutions {
             return false;
         }
         var pieceCount = (int) Math.ceil((double) string.length() / pieceLength);
-        var executor = Executors.newFixedThreadPool(pieceCount);
-        try {
+        try (var executor = Executors.newFixedThreadPool(pieceCount)) {
             var total = new AtomicLong();
             var deviations = new long[pieceCount];
             var countDownLatch = new CountDownLatch(pieceCount);
@@ -94,14 +93,12 @@ public class Solutions {
             countDownLatch.await();
             var currentDeviation = 0;
             for (var newDeviation : deviations) {
-                currentDeviation += newDeviation;
+                currentDeviation += (int) newDeviation;
                 if (currentDeviation < 0) {
                     return false;
                 }
             }
             return total.get() == 0;
-        } finally {
-            executor.shutdown();
         }
     }
 
@@ -112,8 +109,7 @@ public class Solutions {
         if (array == null || Arrays.stream(array).anyMatch(Objects::isNull)) {
             return null;
         }
-        var executor = Executors.newCachedThreadPool();
-        try {
+        try (var executor = Executors.newCachedThreadPool()) {
             return executor.submit(() -> {
                 var length = array.length;
                 if (length > 1) {
@@ -146,8 +142,6 @@ public class Solutions {
                 }
                 return array;
             }).get();
-        } finally {
-            executor.shutdown();
         }
     }
 
@@ -502,11 +496,10 @@ public class Solutions {
                 int sum = iNum + jNum + kNum;
                 if (sum == 0) {
                     result.add(List.of(iNum, jNum, kNum));
-                    k--;
                     // skip all duplicates from maxDefense
-                    while (j < k && nums[k] == nums[k + 1]) {
+                    do {
                         k--;
-                    }
+                    } while (j < k && nums[k] == nums[k + 1]);
                 } else if (sum > 0) {
                     // decrement k to decrease sum
                     k--;
@@ -545,11 +538,10 @@ public class Solutions {
                 if (Math.abs(newDifference) < Math.abs(difference)) {
                     difference = newDifference;
                     closest = sum;
-                    k--;
                     // skip all duplicates from maxDefense
-                    while (j < k && nums[k] == nums[k + 1]) {
+                    do {
                         k--;
-                    }
+                    } while (j < k && nums[k] == nums[k + 1]);
                 } else {
                     if (newDifference > 0) {
                         // increment j to increase sum
@@ -618,6 +610,11 @@ public class Solutions {
             return lettersForFirstDigit;
         }
         List<String> combinationsForNextDigits = letterCombinations(digits.substring(1));
+        return getCombinationsForDigits(lettersForFirstDigit, combinationsForNextDigits);
+    }
+
+    private static List<String> getCombinationsForDigits(List<String> lettersForFirstDigit,
+                                                         List<String> combinationsForNextDigits) {
         int combinationsForDigitsCount = lettersForFirstDigit.size() * combinationsForNextDigits.size();
         List<String> combinationsForDigits = new ArrayList<>(combinationsForDigitsCount);
         for (String letterForFirstDigit : lettersForFirstDigit) {
