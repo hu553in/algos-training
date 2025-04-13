@@ -1,3 +1,5 @@
+import java.util.PriorityQueue
+
 class TreeNode(var `val`: Int) {
     constructor(`val`: Int, left: TreeNode? = null, right: TreeNode? = null) : this(`val`) {
         this.left = left
@@ -74,4 +76,15 @@ fun handleIsland(i: Int, j: Int, grid: Array<CharArray>) {
             handleIsland(i, j - 1, grid)
         }
     }
+}
+
+// https://leetcode.com/problems/kth-largest-element-in-an-array/
+fun findKthLargest(nums: IntArray, k: Int): Int {
+    val pq = PriorityQueue<Int>(nums.size, reverseOrder())
+    nums.forEach { pq.offer(it) }
+    var elem: Int? = null
+    for (i in 1..k) {
+        elem = pq.poll()
+    }
+    return elem!!
 }
