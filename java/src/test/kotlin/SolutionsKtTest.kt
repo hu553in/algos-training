@@ -69,4 +69,57 @@ class SolutionsKtTest {
             )
         )
     }
+
+    @Test
+    fun `test combine`() {
+        assertEquals(
+            // [1, 2, 3, 4] ->
+            // [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
+            listOf(listOf(1, 2), listOf(1, 3), listOf(1, 4), listOf(2, 3), listOf(2, 4), listOf(3, 4)),
+            combine(4, 2)
+        )
+        assertEquals(
+            // [1, 2] ->
+            // [[1, 2]]
+            listOf(listOf(1, 2)),
+            combine(2, 2)
+        )
+        assertEquals(
+            // [1, 2, 3] ->
+            // [[1, 2], [1, 3], [2, 3]]
+            listOf(listOf(1, 2), listOf(1, 3), listOf(2, 3)),
+            combine(3, 2)
+        )
+    }
+
+    @Test
+    fun `test calculateTop`() {
+        assertEquals(
+            Top(listOf(2), 2500),
+            calculateTop(
+                listOf(
+                    listOf(UserPerDay(1, 1000), UserPerDay(2, 1500)),
+                    listOf(UserPerDay(2, 1000)),
+                )
+            )
+        )
+        assertEquals(
+            Top(listOf(1, 2), 5500),
+            calculateTop(
+                listOf(
+                    listOf(UserPerDay(1, 2000), UserPerDay(2, 1500)),
+                    listOf(UserPerDay(2, 4000), UserPerDay(1, 3500)),
+                )
+            )
+        )
+        assertEquals(
+            Top(listOf(), 0),
+            calculateTop(
+                listOf(
+                    listOf(UserPerDay(1, 1000), UserPerDay(2, 1500)),
+                    listOf(UserPerDay(3, 1000)),
+                )
+            )
+        )
+    }
 }
