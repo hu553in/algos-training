@@ -1,4 +1,4 @@
-name: Java tests
+name: Java/Kotlin tests
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./java
+        working-directory: ./java_kotlin
 
     strategy:
       matrix:
@@ -37,5 +37,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.java }}
-          path: java/build/reports/tests/test/
+          path: java_kotlin/build/reports/tests/test/
           retention-days: 7

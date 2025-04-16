@@ -1,7 +1,6 @@
 package solutions
 
 // https://leetcode.com/problems/n-th-tribonacci-number
-
 func Tribonacci(n int) int {
 	arr := make([]int, n+1)
 	arr[0] = 0

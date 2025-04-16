@@ -1,5 +1,4 @@
 -- https://leetcode.com/problems/biggest-single-number/
-
 with nums_and_nulls as (select null as num
 
                         union

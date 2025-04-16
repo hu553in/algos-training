@@ -2,9 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 
-/**
- * <a href="https://leetcode.com/problems/implement-trie-prefix-tree/">208. Implement Trie (Prefix Tree)</a>
- */
+// https://leetcode.com/problems/implement-trie-prefix-tree/
 public class Trie {
 
     private final Map<Character, Node> nodes = new HashMap<>();
