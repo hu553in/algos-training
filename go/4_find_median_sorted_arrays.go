@@ -1,6 +1,6 @@
 package solutions
 
-// https://leetcode.com/problems/median-of-two-sorted-arrays
+// https://leetcode.com/problems/median-of-two-sorted-arrays/
 func FindMedianSortedArraysTwoPointers(nums1 []int, nums2 []int) float64 {
 	nums := make([]int, len(nums1)+len(nums2))
 	i := 0
