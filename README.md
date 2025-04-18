@@ -1,4 +1,4 @@
-# Algorithms & data structures training
+# Algos training
 
 This repo contains solutions of different tasks related to algorithms and data structures
 implemented in different languages:
@@ -11,4 +11,6 @@ implemented in different languages:
 
 If some filename does not contain task number, then it's just not from LeetCode :)
 
-[![Java tests](https://github.com/hu553in/algorithms-and-data-structures-training/actions/workflows/java-tests.yml/badge.svg)](https://github.com/hu553in/algorithms-and-data-structures-training/actions/workflows/java-tests.yml)
+[![Java/Kotlin tests](https://github.com/hu553in/algos-training/actions/workflows/java-kotlin-tests.yml/badge.svg)](https://github.com/hu553in/algos-training/actions/workflows/java-kotlin-tests.yml)
+
+[![Go tests](https://github.com/hu553in/algos-training/actions/workflows/go-tests.yml/badge.svg)](https://github.com/hu553in/algos-training/actions/workflows/go-tests.yml)
