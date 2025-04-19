@@ -1,12 +1,11 @@
 package _392_is_subsequence
 
-import "testing"
+import (
+	"gotest.tools/v3/assert"
+	"testing"
+)
 
 func TestIsSubsequence(t *testing.T) {
-	if !IsSubsequence("abc", "ahbgdc") {
-		t.Errorf("IsSubsequence(\"abc\", \"ahbgdc\") must be true")
-	}
-	if IsSubsequence("axc", "ahbgdc") {
-		t.Errorf("IsSubsequence(\"axc\", \"ahbgdc\") must be false")
-	}
+	assert.Assert(t, IsSubsequence("abc", "ahbgdc"))
+	assert.Assert(t, !IsSubsequence("axc", "ahbgdc"))
 }

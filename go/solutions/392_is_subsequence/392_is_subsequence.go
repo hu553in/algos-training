@@ -1,6 +1,6 @@
 package _392_is_subsequence
 
-// https://leetcode.com/problems/is-subsequence/
+// IsSubsequence https://leetcode.com/problems/is-subsequence/
 func IsSubsequence(s string, t string) bool {
 	if s == t {
 		return true
