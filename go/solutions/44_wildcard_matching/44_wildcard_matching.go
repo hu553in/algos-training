@@ -27,7 +27,7 @@ func IsMatch(s string, p string) bool {
 			anyTrue = anyTrue || m[row][col]
 		}
 		if !anyTrue {
-			return false
+			break
 		}
 	}
 	render(s, p, m)
