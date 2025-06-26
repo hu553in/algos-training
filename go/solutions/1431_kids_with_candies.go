@@ -1,3 +1,5 @@
+package solutions
+
 // KidsWithCandies https://leetcode.com/problems/kids-with-the-greatest-number-of-candies/
 func KidsWithCandies(candies []int, extraCandies int) []bool {
 	max := 0
