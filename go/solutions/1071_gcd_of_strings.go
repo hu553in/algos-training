@@ -1,5 +1,7 @@
 package solutions
 
+import "strings"
+
 // GcdOfStrings https://leetcode.com/problems/greatest-common-divisor-of-strings/
 func GcdOfStrings(str1 string, str2 string) string {
 	l1 := len(str1)
