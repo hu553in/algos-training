@@ -1,3 +1,5 @@
+package solutions
+
 // CanPlaceFlowers https://leetcode.com/problems/can-place-flowers/
 func CanPlaceFlowers(flowerbed []int, n int) bool {
 	if n == 0 {
