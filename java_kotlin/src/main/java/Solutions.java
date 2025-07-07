@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class Solutions {
     }
 
     /**
-     * Validate round brackets only — () — via MapReduce (without stack)
+     * Validate round brackets only — () — via MapReduce (without a stack)
      */
     public boolean validateRoundBracketsViaMapReduce(
         final String string,
@@ -183,7 +184,7 @@ public class Solutions {
     }
 
     /**
-     * Sort array of fixed number set — e.g. 0, 1, 2 — with O(n) complexity
+     * Sort array of fixed number set — e.g., 0, 1, 2 — with O(n) complexity
      */
     public int[] sortArrayOfFixedNumberSet(int[] array) {
         if (array == null) {
@@ -203,14 +204,14 @@ public class Solutions {
     }
 
     /**
-     * There is queue for tickets.
-     * Each person requires certain number of tickets.
-     * Single person can buy only one ticket at single time.
+     * There is a queue for tickets.
+     * Each person requires a certain number of tickets.
+     * A single person can buy only one ticket at a single time.
      * <p>
-     * If more is required, then person goes to end of queue with number of required tickets reduced by 1.
-     * If person has bought all required tickets, then they leave queue and queue is shortened.
+     * If more is required, then person goes to the end of queue with number of required tickets reduced by 1.
+     * If a person has bought all required tickets, then they leave queue and queue is shortened.
      * <p>
-     * New people do not appear in queue.
+     * New people do not appear in the queue.
      * <p>
      * Task is to calculate number of iterations of ticket purchases for target person to buy all tickets they require.
      *
@@ -246,7 +247,7 @@ public class Solutions {
     }
 
     /**
-     * Convert binary search tree to list
+     * Convert a binary search tree to list
      */
     public <T> List<T> convertBinarySearchTreeToList(final BinaryTreeNode<T> rootNode) {
         if (rootNode == null) {
@@ -277,7 +278,7 @@ public class Solutions {
     }
 
     /**
-     * Convert binary search tree to list with recursion
+     * Convert a binary search tree to list with recursion
      */
     public <T> List<T> convertBinarySearchTreeToListWithRecursion(final BinaryTreeNode<T> rootNode) {
         var result = new LinkedList<T>();
@@ -290,7 +291,7 @@ public class Solutions {
     }
 
     /**
-     * Check whether binary tree is binary search tree
+     * Check whether a binary tree is a binary search tree
      */
     public <T extends Comparable<T>> boolean isBinaryTreeSearch(
         final BinaryTreeNode<T> rootNode,
@@ -351,7 +352,7 @@ public class Solutions {
                 var min = buffer.firstEntry();
                 if (min != null) {
                     offerResult = consumer.offer(min.getKey());
-                    var producerIndex = min.getValue().remove(0);
+                    var producerIndex = min.getValue().removeFirst();
                     if (min.getValue().isEmpty()) {
                         buffer.remove(min.getKey());
                     }
@@ -373,7 +374,7 @@ public class Solutions {
     /**
      * Mirror binary tree
      */
-    public <T> BinaryTreeNode<T> mirrorBinaryTree(final BinaryTreeNode<T> rootNode) {
+    public <T> void mirrorBinaryTree(final BinaryTreeNode<T> rootNode) {
         if (rootNode != null) {
             var temp = rootNode.getLeftChild();
             rootNode.setLeftChild(rootNode.getRightChild());
@@ -381,11 +382,10 @@ public class Solutions {
             mirrorBinaryTree(rootNode.getLeftChild());
             mirrorBinaryTree(rootNode.getRightChild());
         }
-        return rootNode;
     }
 
     /**
-     * Find unpaired element in array of paired elements, e.g.:
+     * Find an unpaired element in an array of paired elements, e.g.:
      * <p>
      * [ 1, 1, 5, 3, 3, 4, 4 ] -> 2
      */
@@ -504,7 +504,7 @@ public class Solutions {
                     // decrement k to decrease sum
                     k--;
                 } else {
-                    // increment j to increase sum
+                    // increment j to increase a sum
                     j++;
                 }
             }
@@ -544,7 +544,7 @@ public class Solutions {
                     } while (j < k && nums[k] == nums[k + 1]);
                 } else {
                     if (newDifference > 0) {
-                        // increment j to increase sum
+                        // increment j to increase a sum
                         j++;
                     } else {
                         // decrement k to decrease sum
@@ -562,7 +562,7 @@ public class Solutions {
      * represents the properties of the ith character in the game.
      * <p>
      * A character is said to be weak if any other character has both attack and defense levels strictly greater than
-     * this character's attack and defense levels. More formally, a character i is said to be weak if there exists
+     * this character's attack and defense levels. More formally, an i-th character is said to be weak if there exists
      * another character j where attack_j > attack_i and defense_j > defense_i.
      * <p>
      * Return the number of weak characters.
@@ -712,7 +712,7 @@ public class Solutions {
 
     /**
      * Find the longest sequence of 1 in a binary vector, which can be achieved by deleting any single element.
-     * Single element must be removed.
+     * A single element must be removed.
      * Space = O(1), time = O(n).
      */
     public int findLongest1SequenceAfterDeletingSingleElement(int[] nums) {
@@ -810,5 +810,239 @@ public class Solutions {
             max = current;
         }
         return max;
+    }
+
+    // https://leetcode.com/problems/valid-palindrome/
+    public boolean isPalindrome(String s) {
+        if (s.length() < 2) {
+            return true;
+        }
+        s = s.toLowerCase();
+
+        var left = skipLeft(0, s);
+        var right = skipRight(s.length() - 1, s);
+
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left = skipLeft(left + 1, s);
+            right = skipRight(right - 1, s);
+        }
+
+        return true;
+    }
+
+    private int skipLeft(int left, String s) {
+        while (left < s.length() - 1 && !Character.isLetterOrDigit(s.charAt(left))) {
+            left++;
+        }
+        return left;
+    }
+
+    private int skipRight(int right, String s) {
+        while (right > 0 && !Character.isLetterOrDigit(s.charAt(right))) {
+            right--;
+        }
+        return right;
+    }
+
+    // https://leetcode.com/problems/valid-palindrome/
+    public boolean isPalindrome_preFiltering(String s) {
+        if (s.length() < 2) return true;
+        var list = new ArrayList<Character>();
+        for (var c : s.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
+                list.add(Character.toLowerCase(c));
+            }
+        }
+        int size = list.size();
+        if (size < 2) return true;
+        var len = size / 2;
+        for (var i = 0; i <= len; i++) {
+            if (list.get(i) != list.get(size - 1 - i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // https://leetcode.com/problems/reverse-linked-list/
+    public ListNode reverseList(ListNode head) {
+        if (head == null) return null;
+        var reversed = reverseListNode(head, head.next);
+        head.next = null;
+        return reversed;
+    }
+
+    private ListNode reverseListNode(ListNode prev, ListNode head) {
+        if (head != null) {
+            var next = head.next;
+            head.next = prev;
+            return reverseListNode(head, next);
+        }
+        return prev;
+    }
+
+    // https://leetcode.com/problems/string-compression/
+    public int compress(char[] chars) {
+        // short circuit for [] and ["a"]
+        if (chars.length < 2) {
+            return chars.length;
+        }
+
+        // handle all sequences excluding last
+        var l = 0;
+        var count = 1;
+        for (var i = 1; i < chars.length; i++) {
+            if (chars[i] == chars[i - 1]) {
+                count++;
+            } else {
+                chars[l] = chars[i - 1];
+                l++;
+                if (count > 1) {
+                    var countStr = String.valueOf(count);
+                    var countStrLength = countStr.length();
+                    for (var j = l; j < l + countStrLength; j++) {
+                        chars[j] = countStr.charAt(j - l);
+                    }
+                    l = l + countStrLength;
+                }
+                count = 1;
+            }
+        }
+
+        // handle last sequence
+        chars[l] = chars[chars.length - 1];
+        l++;
+        if (count > 1) {
+            var countStr = String.valueOf(count);
+            for (var j = l; j < l + countStr.length(); j++) {
+                chars[j] = countStr.charAt(j - l);
+            }
+            l = l + countStr.length();
+        }
+
+        return l;
+    }
+
+    // https://leetcode.com/problems/longest-substring-without-repeating-characters/
+    public int lengthOfLongestSubstring_linkedHashSet(String s) {
+        if (s.length() < 2) {
+            return s.length();
+        }
+        var max = 1;
+        var set = new LinkedHashSet<Character>();
+        for (var i = 0; i < s.length(); i++) {
+            while (!set.add(s.charAt(i))) {
+                set.removeFirst();
+            }
+            if (set.size() > max) {
+                max = set.size();
+            }
+        }
+        return max;
+    }
+
+    // https://leetcode.com/problems/longest-substring-without-repeating-characters/
+    public int lengthOfLongestSubstring_slidingWindow(String s) {
+        if (s.length() < 2) {
+            return s.length();
+        }
+        var max = 1;
+        var left = 0;
+        var right = 0;
+        var map = new HashMap<Character, Integer>(s.length());
+        map.put(s.charAt(left), left);
+        while (true) {
+            right++;
+            if (right == s.length()) {
+                return max;
+            }
+            var dupIndex = map.put(s.charAt(right), right);
+            if (dupIndex != null && dupIndex >= left) {
+                left = dupIndex + 1;
+            }
+            if (right - left >= max) {
+                max = right - left + 1;
+            }
+        }
+    }
+
+    // https://leetcode.com/problems/valid-mountain-array/
+    public boolean validMountainArray(int[] arr) {
+        var len = arr.length;
+        if (len < 3 || arr[1] <= arr[0] || arr[len - 1] >= arr[len - 2]) return false;
+        var decreasing = false;
+        for (var i = 2; i < len; i++) {
+            var curr = arr[i];
+            var prev = arr[i - 1];
+            if (curr == prev) return false;
+            if (!decreasing && curr < prev) decreasing = true;
+            if (decreasing && curr > prev) return false;
+        }
+        return true;
+    }
+
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+    public int removeDuplicates(int[] nums) {
+        if (nums.length < 2) return nums.length;
+        var k = 1;
+        var currentBorderIndex = 0;
+        for (var i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[currentBorderIndex]) {
+                nums[k] = nums[i];
+                k++;
+                currentBorderIndex = i;
+            }
+        }
+        return k;
+    }
+
+    // https://leetcode.com/problems/plus-one/
+    public int[] plusOne(int[] digits) {
+        var transfer = 1;
+        for (var i = digits.length - 1; i >= 0; i--) {
+            var sum = digits[i] + transfer;
+            digits[i] = sum;
+            transfer = 0;
+            if (sum >= 10) {
+                digits[i] %= 10;
+                transfer++;
+            } else {
+                break;
+            }
+        }
+        if (transfer > 0) {
+            var copy = new int[digits.length + 1];
+            copy[0] = transfer;
+            System.arraycopy(digits, 0, copy, 1, digits.length);
+            return copy;
+        }
+        return digits;
+    }
+
+    // https://leetcode.com/problems/valid-anagram/
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) return false;
+        if (s.length() == 1) return s.charAt(0) == t.charAt(0);
+
+        var map1 = new HashMap<Character, Integer>();
+        var map2 = new HashMap<Character, Integer>();
+
+        for (var i = 0; i < s.length(); i++) {
+            map1.compute(s.charAt(i), (k, c) -> c == null ? 1 : c + 1);
+            map2.compute(t.charAt(i), (k, c) -> c == null ? 1 : c + 1);
+        }
+
+        return map1.equals(map2);
+    }
+
+    public boolean isAnagram_sortArrays(String s, String t) {
+        var sa = s.toCharArray();
+        var ta = t.toCharArray();
+        Arrays.sort(sa);
+        Arrays.sort(ta);
+        return Arrays.equals(sa, ta);
     }
 }
