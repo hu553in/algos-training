@@ -374,7 +374,7 @@ public class Solutions {
     /**
      * Mirror binary tree
      */
-    public <T> void mirrorBinaryTree(final BinaryTreeNode<T> rootNode) {
+    public <T> BinaryTreeNode<T> mirrorBinaryTree(final BinaryTreeNode<T> rootNode) {
         if (rootNode != null) {
             var temp = rootNode.getLeftChild();
             rootNode.setLeftChild(rootNode.getRightChild());
@@ -382,6 +382,7 @@ public class Solutions {
             mirrorBinaryTree(rootNode.getLeftChild());
             mirrorBinaryTree(rootNode.getRightChild());
         }
+        return rootNode;
     }
 
     /**
