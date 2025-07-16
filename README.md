@@ -8,7 +8,7 @@ implemented in different languages:
 
 - ~~Java (legacy)~~
 - ~~Python (legacy)~~
-- **Kotlin (active)**
+- ~~Kotlin (legacy)~~
 - **Go (active)**
 - **SQL (active)**
 
