@@ -6,10 +6,10 @@
 This repo contains solutions of different tasks related to algorithms and data structures
 implemented in different languages:
 
-- ~~Java (legacy)~~
-- ~~Python (legacy)~~
-- ~~Kotlin (legacy)~~
-- **Go (active)**
-- **SQL (active)**
+- Java
+- Python
+- Kotlin
+- Go
+- SQL
 
-If some filename does not contain task number, then it's just not from LeetCode :)
+If some solution does not contain task number, then it's just not from LeetCode :)
