@@ -1046,4 +1046,30 @@ public class Solutions {
         Arrays.sort(ta);
         return Arrays.equals(sa, ta);
     }
+
+    // https://leetcode.com/problems/daily-temperatures/
+    public int[] dailyTemperatures(int[] t) {
+        var s = new ArrayDeque<Integer>(t.length - 1);
+        for (var i = 0; i < t.length - 1; i++) {
+            if (t[i] >= t[i + 1]) {
+                s.push(i);
+            } else {
+                t[i] = 1;
+                while (s.size() > 0) {
+                    var j = s.pop();
+                    if (t[j] < t[i + 1]) { 
+                        t[j] = i + 1 - j;
+                    } else {
+                        s.push(j);
+                        break;
+                    }
+                }
+            }
+        }
+        s.push(t.length - 1);
+        for (var i : s) {
+            t[i] = 0;
+        }
+        return t;
+    }
 }
